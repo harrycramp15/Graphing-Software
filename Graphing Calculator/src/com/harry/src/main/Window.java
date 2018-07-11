@@ -1,7 +1,9 @@
 package com.harry.src.main;
 
 import java.awt.Dimension;
+import java.io.IOException;
 
+import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 
 public class Window {
@@ -23,6 +25,11 @@ public class Window {
 		frame.setLocationRelativeTo(null);
 		frame.setResizable(false);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		try {
+			frame.setIconImage(ImageIO.read(this.getClass().getResource("/icon.png")));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		frame.setVisible(true);
 		frame.add(main);
 		

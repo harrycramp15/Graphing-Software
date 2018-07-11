@@ -17,12 +17,12 @@ public class Curve {
 	private IntPoint[] points;
 	
 	public Curve(String exp, Color clr) {
-		this.exp = exp.toLowerCase();
+		this.exp = exp;
 		this.clr = clr;
 		
-		ops = new char[4];
-		points = new IntPoint[100];
 		final int count = 30;
+		ops = new char[4];
+		points = new IntPoint[count * 2];
 		for(int x = -count; x < points.length - count; x++) {
 			String subExp = subValue(spacing(exp), x);
 			int y = 0;

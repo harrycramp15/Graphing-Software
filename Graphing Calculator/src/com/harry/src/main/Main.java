@@ -18,6 +18,9 @@ public class Main extends JPanel {
 	public static final int WIDTH = 600;
 	public static final int HEIGHT = WIDTH;
 	
+	private final char[] legalChars = { '+', '-', '/', '*', '^', '0', '1', '2', '3', '4', '5',
+										'6', '7', '8', '9', ' ', 'x'};
+	
 	private final Color bgClr = new Color(200, 200, 200);
 	
 	private Color[] clrList;
@@ -37,15 +40,10 @@ public class Main extends JPanel {
 		Window window = new Window("Graphing Calculator", WIDTH, HEIGHT, this);
 		
 		clrPtr = 0;
-		for(int i = 0; i < terms.length; i++) {
-			Color tmpClr = clrList[clrPtr % clrList.length];
-			String tmpStr = terms[i];
-			Curve tmpCrv = new Curve(tmpStr, tmpClr);
-			curves.add(tmpCrv);
-			clrPtr++;
-		}
+		for(int i = 0; i < terms.length; i++)
+			this.addNewExpression(terms[i]);
 		
-		stroke = 1;
+		stroke = 3;
 		this.addKeyListener(new KeyInput(this, window.getFrame()));
 		this.requestFocus();
 	}
@@ -90,7 +88,27 @@ public class Main extends JPanel {
 		}
 	}
 	
+	private boolean isLegal(String exp) {
+		boolean legalFound = false;
+		for(int i = 0; i < exp.length(); i++) {
+			char tempChar = exp.charAt(i);
+			legalFound = false;
+			for(int j = 0; j < legalChars.length; j++) {
+				if(tempChar == legalChars[j]) {
+					legalFound = true;
+					break;
+				}
+			}
+			if(!legalFound)
+				return false;
+		}
+		return true;
+	}
+	
 	public void addNewExpression(String exp) {
+		exp = exp.toLowerCase();
+		if(exp.equals(null) || exp.length() <= 0 || !isLegal(exp))
+			return;
 		Color tmpClr = clrList[clrPtr % clrList.length];
 		clrPtr++;
 		Curve tmpCrv = new Curve(exp, tmpClr);
