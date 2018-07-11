@@ -20,8 +20,12 @@ public class Curve {
 		this.exp = exp;
 		this.clr = clr;
 		
-		final int count = 30;
 		ops = new char[4];
+		ops[0] = '+';
+		ops[1] = '-';
+		ops[2] = '*';
+		ops[3] = '/';
+		final int count = 30;
 		points = new IntPoint[count * 2];
 		for(int x = -count; x < points.length - count; x++) {
 			String subExp = subValue(spacing(exp), x);
@@ -34,15 +38,9 @@ public class Curve {
 			points[x + count] = new IntPoint(x, y);
 			System.out.println("SUB EXPRESSION FOR " + x + ": " + subExp + ", Y VALUE:" + y);
 		}
-		
-		ops[0] = '+';
-		ops[1] = '-';
-		ops[2] = '*';
-		ops[3] = '/';
 	}
 	
 	private String subValue(String exp, int value) {
-		System.out.println("SPACED EXP: " + exp);
 		return exp.replace("x", "" + value);
 	}
 	
@@ -99,7 +97,8 @@ public class Curve {
 	
 	private int locateOpPoint(String exp) {
 		for(int i = 0; i < exp.length(); i++) {
-			if(exp.charAt(i) == '^')
+			char tempChar = exp.charAt(i);
+			if(tempChar == '^')
 				return i;
 		}
 		return -1;
@@ -118,7 +117,6 @@ public class Curve {
 		for(int i = 0; i < ops.length; i++) {
 			char tempOp = ops[i];
 			exp = exp.replace("" + tempOp, " " + tempOp + " ");
-			System.out.println("REAL SPACING: " + exp.replace("" + tempOp, " " + tempOp + " "));
 		}
 		return exp;
 	}

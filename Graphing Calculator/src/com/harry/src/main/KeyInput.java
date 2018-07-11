@@ -34,8 +34,4 @@ public class KeyInput extends KeyAdapter {
 			main.popExp();
 	}
 	
-	public void keyReleased(KeyEvent e) {
-		int key = e.getKeyCode();
-	}
-	
 }
