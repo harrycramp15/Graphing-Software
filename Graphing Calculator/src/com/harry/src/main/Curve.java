@@ -9,10 +9,10 @@ import javax.script.ScriptException;
 
 public class Curve {
 
-	private char[] ops;
-	
 	private String exp;
 	private Color clr;
+	
+	private final char[] ops;
 	
 	private IntPoint[] points;
 	
@@ -20,20 +20,27 @@ public class Curve {
 		this.exp = exp;
 		this.clr = clr;
 		
-		ops = new char[4];
+		ops = new char[3];
 		ops[0] = '+';
-		ops[1] = '-';
+		ops[1] = '/';
 		ops[2] = '*';
-		ops[3] = '/';
+		//ops[3] = '-';
 		final int count = 30;
+		exp = exp.replace("-x", "-1x");
+		plotPoints(" " + exp + " ", count);
+	}
+	
+	private void plotPoints(String exp, int count) {
 		points = new IntPoint[count * 2];
+		exp = formatCoefficients(spacing(exp));
 		for(int x = -count; x < points.length - count; x++) {
-			String subExp = subValue(spacing(exp), x);
+			String subExp = subValue(exp, x);
 			int y = 0;
 			try {
 				y = eval(subExp);
 			} catch (ScriptException e) {
-				e.printStackTrace();
+				//e.printStackTrace();
+				System.out.println("OOF");
 			}
 			points[x + count] = new IntPoint(x, y);
 			System.out.println("SUB EXPRESSION FOR " + x + ": " + subExp + ", Y VALUE:" + y);
@@ -60,8 +67,6 @@ public class Curve {
 		int leftSpace = 0;
 		int rightSpace = 0;
 		String token = "";
-		
-		exp = " " + exp + " ";
 		
 		opPoint = locateOpPoint(exp);
 		while(opPoint != -1) {
@@ -121,6 +126,33 @@ public class Curve {
 		return exp;
 	}
 	
+	private String formatCoefficients(String exp) {
+		System.out.println("EXPRESSION: '" + exp + "'");
+		for(int i = 1; i < exp.length(); i++) {
+			char tempOp = exp.charAt(i);
+			if(tempOp == 'x') {
+				if(exp.charAt(i - 1) != ' ') {
+					System.out.println("BINGO! " + i);
+					String token = extractToken(exp, i);
+					System.out.println("TOKEN: " + token);
+					String replace = token + " * x";
+					exp = exp.replace(token + "x", replace);
+				}
+			}
+		}
+		return exp;
+	}
+	
+	private String extractToken(String exp, int index) {
+		int start = index;
+		int end = start;
+		System.out.println("START:" + start);
+		while(exp.charAt(start) != ' ')
+			start--;
+		System.out.println("TOKEN BETWEEN: " + start + " AND " + end);
+		return exp.substring(start, end);
+	}
+	
 	public void render(Graphics g) {
 		g.setColor(clr);
 		for(int i = 0; i < points.length - 1; i++) {
@@ -138,6 +170,10 @@ public class Curve {
 	
 	public Color getColour() {
 		return clr;
+	}
+	
+	public IntPoint[] points() {
+		return points;
 	}
 	
 }
